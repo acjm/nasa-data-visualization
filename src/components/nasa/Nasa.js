@@ -1,6 +1,8 @@
 import React, { useEffect, useContext, useState } from "react";
 
 import BarChart from "../charts/BarChart";
+import TableData from "../table/tableData";
+
 import NasaContext from "../../context/nasa/nasaContext";
 
 import { getNeosDataFormatted } from "../../utils/getNeosDataFormatted";
@@ -8,6 +10,7 @@ import { getNeosDataFormatted } from "../../utils/getNeosDataFormatted";
 const Nasa = () => {
   // local state
   const [isFiltering, setIsFiltering] = useState(false);
+  const [isTable, setIsTable] = useState(false);
 
   // context
   const nasaContext = useContext(NasaContext);
@@ -29,6 +32,15 @@ const Nasa = () => {
     if (isFiltering) nasaContext.getNeoFiltred(orbitalBody);
   };
 
+  //
+  const onChangeChart = (e) => {
+    if (e.target.value === "Table") {
+      setIsTable(true);
+    } else {
+      setIsTable(false);
+    }
+  };
+
   return (
     <div className="c-main-container">
       <h2> Nasa component</h2>
@@ -39,8 +51,14 @@ const Nasa = () => {
           <option value="Mars">Mars</option>
           <option value="Merc">Merc</option>
         </select>
+        <select onChange={onChangeChart}>
+          <option value="Chart">Chart</option>
+
+          <option value="Table">Table</option>
+        </select>
       </div>
-      <BarChart data={newData} />
+      {isTable && <TableData data={near_earth_objects} />}
+      {!isTable && <BarChart data={newData} />}{" "}
     </div>
   );
 };
