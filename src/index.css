@@ -1,3 +1,41 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.c-main-container {
+    width: 980px;
+    margin: 0 auto;
+}
+
+@media screen and ( max-width: 980px) {
+    
+    .c-main-container {
+        width: 100%;
+        margin: 0 auto;
+    }
+
+}
+
+/* Loaders style */
+@keyframes loader-rotate {
+    0% {
+        transform: rotate(0);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+.loader-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin:150px auto;
+}
+
+.loader {
+    border-right-color: transparent;
+    animation: loader-rotate 1s linear infinite;
+}
