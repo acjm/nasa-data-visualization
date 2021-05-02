@@ -3,7 +3,10 @@ import axios from "axios";
 
 import NasaContext from "./nasaContext";
 import NasaReducer from "./nasaReducer";
-import { GET_NEOS, SET_LOADING } from "../types";
+import { GET_NEOS, GET_NEOS_FILTRED, SET_LOADING } from "../types";
+
+// utils
+import { getNeosWithOrbitalBody } from "../../utils/getFilteredNeos";
 
 //TODO: Move this to env folder
 const BASE_URL =
@@ -34,6 +37,41 @@ const NasaState = (props) => {
     });
   };
 
+  /**
+   * Get neos filtred by orbit body
+   * @params (String)
+   * @return {*}
+   */
+  const getNeoFiltred = async (orbitalBody) => {
+    setLoading();
+
+    // Update the state
+    // Instead of calling the API everytime teh action is dispatched
+    // we can setup a caching system
+    // We can use Redis, or Appollo client for that
+    const res = await axios.get(`${BASE_URL}`);
+
+    dispatch({
+      type: GET_NEOS,
+      payload: res.data,
+    });
+    //Update the state
+    // Instead of calling the API everytime teh action is dispatched
+    // we can setup a caching system
+    // We can use Redis, or Appollo client for that
+
+    const data = await getNeosWithOrbitalBody(
+      orbitalBody,
+      res.data.near_earth_objects
+    );
+    //console.log(data);
+    data !== undefined &&
+      dispatch({
+        type: GET_NEOS_FILTRED,
+        payload: data,
+      });
+  };
+
   // Set Loading
   const setLoading = () => dispatch({ type: SET_LOADING });
 
@@ -43,6 +81,7 @@ const NasaState = (props) => {
         neos: state.neos,
         loading: state.loading,
         getNeos,
+        getNeoFiltred,
         setLoading,
       }}
     >
